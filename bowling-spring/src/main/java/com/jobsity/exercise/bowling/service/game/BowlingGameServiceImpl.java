@@ -91,11 +91,14 @@ public class BowlingGameServiceImpl implements GameService {
 
 	protected String[] getResultByLine(String line, int pos) throws BowlingGameException {
 
-		/*
-		 * if (line.trim().matches("\\w+\\t[\\d{1,2}|F]")) { throw new
-		 * BowlingGameException("The row " + pos + " (" + line + ") is invalid",
-		 * BowlingCodeException.INVALID_FORMAT.name()); }
-		 */
+		String regex = "\\w+\\t\b[\\d|10|F]\b";
+		
+		if (line.trim().matches(regex)) {
+		System.out.println("The row " + pos + " (" + line + ") is invalid");
+			throw new BowlingGameException("The row " + pos + " (" + line + ") is invalid",
+					BowlingCodeException.INVALID_FORMAT.name());
+		}
+
 		
 		String[] arrayLine = line.split("\\t");
 		return arrayLine;
