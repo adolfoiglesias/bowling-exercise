@@ -25,9 +25,10 @@ import com.jobsity.bowling.service.output.ScoreOutputService;
 
 /**
  * @author Adolfo Miguel iglesias
- * <p>
- * 	Class represents the implemented service of GameService interface
- * </p>s
+ *         <p>
+ *         Class represents the implemented service of GameService interface
+ *         </p>
+ *         s
  */
 public class BowlingGameServiceImpl implements GameService {
 
@@ -89,13 +90,14 @@ public class BowlingGameServiceImpl implements GameService {
 	}
 
 	protected String[] getResultByLine(String line, int pos) throws BowlingGameException {
-
-		/*
-		 * if (line.trim().matches("\\w+\\t[\\d{1,2}|F]")) { throw new
-		 * BowlingGameException("The row " + pos + " (" + line + ") is invalid",
-		 * BowlingCodeException.INVALID_FORMAT.name()); }
-		 */
+		String regex = "\\w+\\t\b[\\d|10|F]\b";
 		
+		if (line.trim().matches(regex)) {
+		System.out.println("The row " + pos + " (" + line + ") is invalid");
+			throw new BowlingGameException("The row " + pos + " (" + line + ") is invalid",
+					BowlingCodeException.INVALID_FORMAT.name());
+		}
+
 		String[] arrayLine = line.split("\\t");
 		return arrayLine;
 
@@ -106,25 +108,26 @@ public class BowlingGameServiceImpl implements GameService {
 		BowlingGame game = bowlingGameFactory.createGame();
 		ContainerGame.setGame(game);
 	}
-	
+
 	@Override
 	public void resetGame() {
 		BowlingGame game = ContainerGame.getGame();
-		if(game != null){
+		if (game != null) {
 			game.setPlayers(new HashSet<>());
 		}
 	}
-	
+
 	protected void validate(Player player) throws BowlingGameException {
-		if(player.getCurrentFrameNumber() == 10 && player.getCurrentFrame().getPinfall().isClosed()) {
-			throw new BowlingGameException("The game does not support more result. Please enter a valid file path ", BowlingCodeException.INVALID_VALUE_RESULT.name());
+		if (player.getCurrentFrameNumber() == 10 && player.getCurrentFrame().getPinfall().isClosed()) {
+			throw new BowlingGameException("The game does not support more result. Please enter a valid file path ",
+					BowlingCodeException.INVALID_VALUE_RESULT.name());
 		}
 	}
 
 	public void recordPlay(String playerName, String result) throws BowlingGameException {
 
 		Player player = playerService.addNewPlayer(playerName);
-		
+
 		validate(player);
 
 		Pinfall pinfall = pinfallService.recordPlay(player, result);
