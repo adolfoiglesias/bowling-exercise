@@ -13,8 +13,6 @@ import com.jobsity.exercise.bowling.exception.BowlingGameException;
  */
 public interface PinfallInterface {
 	
-	public boolean addResult(String result) throws BowlingGameException;
-	
-	public String showPinfallValue();
+
 
 }

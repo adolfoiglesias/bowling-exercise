@@ -3,24 +3,15 @@
  */
 package com.jobsity.exercise.bowling.service.game;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashSet;
+import java.io.*;
 
-import com.jobsity.exercise.bowling.container.BowlingGameFactoryImpl;
-import com.jobsity.exercise.bowling.container.BowlingGameFactory;
+import com.jobsity.exercise.bowling.factory.BowlingGameFactory;
 import com.jobsity.exercise.bowling.exception.BowlingCodeException;
 import com.jobsity.exercise.bowling.exception.BowlingGameException;
 import com.jobsity.exercise.bowling.model.BowlingGame;
-import com.jobsity.exercise.bowling.model.ContainerGame;
 import com.jobsity.exercise.bowling.model.Pinfall;
 import com.jobsity.exercise.bowling.model.Player;
-import com.jobsity.exercise.bowling.service.input.FileInputServiceImpl;
 import com.jobsity.exercise.bowling.service.input.InputService;
-import com.jobsity.exercise.bowling.service.output.BowlingScoreOutputServiceImpl;
 import com.jobsity.exercise.bowling.service.output.ScoreOutputService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +40,9 @@ public class BowlingGameServiceImpl implements GameService {
 	@Autowired
 	private InputService inputService;
 
+	protected BowlingGame game;
+	protected BufferedWriter bufferedWriter;
+
 	public BowlingGameServiceImpl() {
 	}
 
@@ -63,61 +57,48 @@ public class BowlingGameServiceImpl implements GameService {
 	}
 
 	@Override
-	public String startGame(String path) throws FileNotFoundException, IOException, BowlingGameException {
+	public void startGame(String path) throws FileNotFoundException, IOException, BowlingGameException {
 
 		File file = inputService.getResource(path);
-
 		BufferedReader gameFileReader = new BufferedReader(new FileReader(file));
 
 		createGame();
-
 		String line = null;
 		int pos = 1;
 
 		while ((line = gameFileReader.readLine()) != null) {
 
 			String[] arrayLine = getResultByLine(line, pos);
-
 			recordPlay(arrayLine[0], arrayLine[1]);
-
 			pos++;
 		}
-
 		gameFileReader.close();
-
-		outputService.setPath(file.getParent());
-		return renderScore();
+		outputService.showScore(game);
 	}
 
 	protected String[] getResultByLine(String line, int pos) throws BowlingGameException {
 
-		String regex = "\\w+\\t\b[\\d|10|F]\b";
-		
-		if (line.trim().matches(regex)) {
-		System.out.println("The row " + pos + " (" + line + ") is invalid");
+		String regex = "^\\w+\\t(\\d|10|F)";
+
+		if (!line.trim().matches(regex)) {
 			throw new BowlingGameException("The row " + pos + " (" + line + ") is invalid",
 					BowlingCodeException.INVALID_FORMAT.name());
 		}
 
-		
 		String[] arrayLine = line.split("\\t");
 		return arrayLine;
-
 	}
 
 	@Override
 	public void createGame() {
-		BowlingGame game = bowlingGameFactory.createGame();
-		ContainerGame.setGame(game);
+		this.game = bowlingGameFactory.createGame();
 	}
 
 	@Override
-	public void resetGame() {
-		BowlingGame game = ContainerGame.getGame();
-		if(game != null){
-			game.setPlayers(new HashSet<>());
-		}
+	public BowlingGame getGame() {
+		return game;
 	}
+
 
 	protected void validate(Player player) throws BowlingGameException {
 		if(player.getCurrentFrameNumber() == 10 && player.getCurrentFrame().getPinfall().isClosed()) {
@@ -127,23 +108,14 @@ public class BowlingGameServiceImpl implements GameService {
 
 	public void recordPlay(String playerName, String result) throws BowlingGameException {
 
-		Player player = playerService.addNewPlayer(playerName);
-		
+		Player player = playerService.addNewPlayer(playerName, game);
 		validate(player);
 
 		Pinfall pinfall = pinfallService.recordPlay(player, result);
-
 		scoreService.score(player);
 
 		pinfallService.addCurrentFrameNumber(player, pinfall);
 	}
-
-	@Override
-	public String renderScore() throws IOException, BowlingGameException {
-		return outputService.showScore(ContainerGame.getGame());
-	}
-
-
 
 
 }

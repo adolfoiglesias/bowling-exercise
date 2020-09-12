@@ -53,4 +53,38 @@ Requirements
       - output file path: /home/adolfo/bowling/output.txt
       
   
+<b>Game rules</b>
+ Rule
+--------------------------
+Que es un spare 
+	- que la suma de las 2 tiros sean 10 (bolos caidos)
+
+Que es un strike 
+	- en un solo tiro se caen todos los bolos.
+
+
+ 1. spare en un frame
+	- tienes 10 ptos  + el resultado del proximo tiro del frame siguiente
+
+  2. el total de un frame es =
+      
+      el total del frame anterior  + el total que le correspode a ese frame
+
   
+  3. si la suma de los bolos caidos en los dos tiros de un frame no es 10 entonces el score del frame es = 
+	score del frame anterior + total de bolos caidos
+
+  4.  cuadno ocurre un strike
+	- le da 10 ptos al frame anterior
+	- tienes 10 ptos acumulados para el frame actual
+	- tiene la posibilidad de tirar dos tiros para sumarselo al frame actual
+		ejemplo
+		frame1 : strike entonces tienes 2 tiros 
+		frame2	: caen 2 bolos y el 2do tiro caen 8 bolos, por tanto tienes un spare en este frame
+		score frame1 es = 
+			10 + 10 (del spare logrado en frame2)	 
+
+
+  5. en los 2 tiros de un frame hay un falso o cero entonces el resultado de ese frame es:
+		total de bolos tirado en algunos de los tiros
+	 		

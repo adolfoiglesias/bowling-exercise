@@ -1,55 +1,43 @@
 package com.jobsity.exercise.bowling.service.game;
 
 import com.jobsity.exercise.bowling.BowlingApplication;
+import com.jobsity.exercise.bowling.factory.BowlingGameFactory;
+import com.jobsity.exercise.bowling.factory.BowlingGameFactoryImpl;
+import com.jobsity.exercise.bowling.service.output.PinfallShowScoreService;
+import com.jobsity.exercise.bowling.service.output.PinfallShowScoreServiceImpl;
 import org.mockito.InjectMocks;
+import static org.mockito.Mockito.*;
+
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-import com.jobsity.exercise.bowling.container.BowlingGameFactoryImpl;
-import com.jobsity.exercise.bowling.container.BowlingGameFactory;
 import com.jobsity.exercise.bowling.exception.BowlingCodeException;
 import com.jobsity.exercise.bowling.exception.BowlingGameException;
 import com.jobsity.exercise.bowling.model.BowlingGame;
-import com.jobsity.exercise.bowling.model.ContainerGame;
 import com.jobsity.exercise.bowling.model.Pinfall;
 import com.jobsity.exercise.bowling.model.Player;
-import com.jobsity.exercise.bowling.service.game.PinfallService;
-import com.jobsity.exercise.bowling.service.game.PinfallServiceImpl;
-import com.jobsity.exercise.bowling.service.game.PlayerService;
-import com.jobsity.exercise.bowling.service.game.PlayerServiceImpl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootTest(classes =  BowlingApplication.class)
+@SpringBootTest
 public class PinfallServiceTest {
 
-    @InjectMocks
-    private static PlayerService playerService = new PlayerServiceImpl();
+    private Player player;
+    @Autowired
+    private PinfallService pinfallService;
 
-    @InjectMocks
-    private static PinfallService pinfallService = new PinfallServiceImpl();
-
+    private BowlingGame game;
 
     @BeforeEach
-    void prepareGame() {
-        BowlingGame game = BowlingGame.createGame();
-        ContainerGame.setGame(game);
-    }
-
-    @AfterEach
-    void restartGame() {
-        BowlingGame game = ContainerGame.getGame();
-        Set<Player> players = new HashSet<>();
-        game.setPlayers(players);
+    void prepareGame() throws BowlingGameException {
+        player = new Player("Adolfo");
     }
 
     @Test
@@ -57,15 +45,12 @@ public class PinfallServiceTest {
 
         String result1 = "10";
 
-        Player player = playerService.addNewPlayer("Adolfo");
         Pinfall pinfall = pinfallService.recordPlay(player, result1);
 
         assertEquals(result1, pinfall.getValue1());
-        assertEquals("X", pinfall.showPinfallValue().trim());
         assertEquals("", pinfall.getValue2());
         assertTrue(pinfall.isStrike());
         assertTrue(pinfall.isClosed());
-
     }
 
     @Test
@@ -74,13 +59,11 @@ public class PinfallServiceTest {
         String result1 = "4";
         String result2 = "6";
 
-        Player player = playerService.addNewPlayer("Adolfo");
         pinfallService.recordPlay(player, result1);
         Pinfall pinfall = pinfallService.recordPlay(player, result2);
 
         assertEquals("4", pinfall.getValue1());
         assertEquals("6", pinfall.getValue2());
-        assertEquals("4 /", pinfall.showPinfallValue().trim());
         assertTrue(pinfall.isSpare());
         assertTrue(pinfall.isClosed());
     }
@@ -91,13 +74,11 @@ public class PinfallServiceTest {
         String result1 = "4";
         String result2 = "5";
 
-        Player player = playerService.addNewPlayer("Adolfo");
         pinfallService.recordPlay(player, result1);
         Pinfall pinfall = pinfallService.recordPlay(player, result2);
 
         assertEquals(result1, pinfall.getValue1());
         assertEquals(result2, pinfall.getValue2());
-        assertEquals("4 5", pinfall.showPinfallValue().trim());
         assertTrue(pinfall.isRegular());
         assertTrue(pinfall.isClosed());
     }
@@ -106,8 +87,6 @@ public class PinfallServiceTest {
     public void addResultInvalidToFrame1() throws BowlingGameException {
 
         String result1 = "w";
-
-        Player player = playerService.addNewPlayer("Adolfo");
 
         Throwable exception = assertThrows(BowlingGameException.class, () -> {
             pinfallService.recordPlay(player, result1);

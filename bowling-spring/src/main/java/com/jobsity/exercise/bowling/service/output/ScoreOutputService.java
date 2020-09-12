@@ -3,7 +3,9 @@
  */
 package com.jobsity.exercise.bowling.service.output;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 import com.jobsity.exercise.bowling.exception.BowlingGameException;
 import com.jobsity.exercise.bowling.model.BowlingGame;
@@ -16,20 +18,11 @@ public interface ScoreOutputService {
 	
 	/**
 	 * 
+	 * Show the game score
 	 * @param game
-	 * @return Save the game score  
 	 * @throws IOException
 	 * @throws BowlingGameException
 	 */
-	public String showScore(BowlingGame game) throws IOException, BowlingGameException;
-	
-	
-	public void setPath(String path);
-	
-	/**
-	 * 
-	 * @return Return the file path with score
-	 */
-	public String getPath();
+	public void showScore(BowlingGame game) throws IOException, BowlingGameException;
 
 }

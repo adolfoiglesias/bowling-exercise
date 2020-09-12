@@ -24,12 +24,9 @@ public class PinfallServiceImpl implements PinfallService {
 	public Pinfall recordPlay(Player player, String result) throws BowlingGameException {
 		
 		Frame  currentFrame = player.getCurrentFrame();
-		
 		Pinfall pinfall = currentFrame.getPinfall();
-		
 		pinfall.addResult(result);
 		return pinfall;
-		
 	}
 	
 	@Override

@@ -40,19 +40,7 @@ public class FileInputServiceImpl implements InputService {
 			throw new BowlingGameException("The path is not file. Please enter a right absolute file path",
 					BowlingCodeException.NO_FILE.name()); 
 		}
-		
-		isWriteable(path);
-		
 		return file;
 	}
-	
-	protected void isWriteable(Path path) throws  BowlingGameException {
-	
-		if(path.getParent() != null && !Files.isWritable(path.getParent())) {
-			throw new BowlingGameException("There is no enough permission to write the score at " 
-					+ path.getParent().getFileName() + ". Please change permissions and enter a right absolute file path",BowlingCodeException.NO_WRITTEN.name());
-		}		
-	}
-	
 
 }

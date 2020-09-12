@@ -1,25 +1,40 @@
 package com.jobsity.exercise.bowling;
 
-import com.jobsity.exercise.bowling.container.BowlingGameFactory;
-import com.jobsity.exercise.bowling.container.BowlingGameFactoryImpl;
 import com.jobsity.exercise.bowling.exception.BowlingGameException;
-import com.jobsity.exercise.bowling.model.BowlingGame;
-import com.jobsity.exercise.bowling.service.game.BowlingGameServiceImpl;
 import com.jobsity.exercise.bowling.service.game.GameService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.OutputStreamWriter;
 
 @Configuration
 @SpringBootApplication
 public class BowlingApplication {
 
 	public static void main(String[] args) {
+		if(args.length != 1){
+			System.out.println("Please must enter a score path file");
+			System.exit(0);
+		}
+
+		String path = args[0];
+		ConfigurableApplicationContext applicationContext = SpringApplication.run(BowlingApplication.class, args);
+		GameService gameService = (GameService) applicationContext.getBean("bowlingGameServiceImpl", GameService.class);
+
+		try{
+			gameService.startGame(path);
+			System.exit(0);
+		} catch (IOException | BowlingGameException e) {
+			handleException(e);
+			System.exit(0);
+		}
+
+
+		/*
 		ConfigurableApplicationContext applicationContext = SpringApplication.run(BowlingApplication.class, args);
 
 
@@ -51,6 +66,8 @@ public class BowlingApplication {
 			}
 		}
 		scanner.close();
+		*/
+
 	}
 
 	private static void handleException(Exception e) {
@@ -64,20 +81,8 @@ public class BowlingApplication {
 			System.out.println(e.getMessage());
 
 		}else {
-
 			System.out.println("Unexpected error, please contact System Administrator");
-			System.exit(0);
 		}
-	}
-
-	@Bean
-	public BowlingGameFactory createGameFactory(){
-		return new BowlingGameFactoryImpl();
-	}
-
-	@Bean
-	public BowlingGame setGame(){
-		return createGameFactory().createGame();
 	}
 
 }

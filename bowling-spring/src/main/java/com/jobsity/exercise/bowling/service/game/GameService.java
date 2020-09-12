@@ -3,10 +3,12 @@
  */
 package com.jobsity.exercise.bowling.service.game;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.jobsity.exercise.bowling.exception.BowlingGameException;
+import com.jobsity.exercise.bowling.model.BowlingGame;
 
 /**
  * @author Adolfo Miguel Iglesias 
@@ -16,12 +18,11 @@ import com.jobsity.exercise.bowling.exception.BowlingGameException;
  */
 public interface GameService {
 
-
 	/**
-	 * Reset a game if not exist
+	 * Get the entity game
+	 * @return
 	 */
-	public void resetGame();
-
+	public BowlingGame getGame();
 	/**
 	 * Create new instance of a game if not exist
 	 */
@@ -37,21 +38,12 @@ public interface GameService {
 	public void recordPlay(String playName, String pinfallResult) throws BowlingGameException;
 	
 	/**
-	 * 
+	 * 	 * Prepare all component to execute a game
 	 * @param path
-	 * @return Prepare all component to start a game 
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws BowlingGameException
 	 */
-	public String startGame(String path) throws FileNotFoundException, IOException, BowlingGameException;
-	
-	/**
-	 * 
-	 * @return Get the score file path 
-	 * @throws IOException
-	 * @throws BowlingGameException
-	 */
-	public String renderScore() throws IOException, BowlingGameException ;
-	
+	public void startGame(String path) throws FileNotFoundException, IOException, BowlingGameException;
+
 }

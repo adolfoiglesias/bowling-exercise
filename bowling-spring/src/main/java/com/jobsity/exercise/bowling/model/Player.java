@@ -11,11 +11,9 @@ package com.jobsity.exercise.bowling.model;
  */
 public class Player{
 
-	//private List<Frame> frames;
 	private Frame[] frames;
 	private String playerName;
 	private Integer finalScore;
-	private Integer frameNumberToCalculate;
 	private Integer currentFrameNumber;
 	private Integer currentScoreFrame;
 	
@@ -30,30 +28,12 @@ public class Player{
 		}
 		this.frames[9] = new Frame(10, new LastPinfall(), false);
 		
-		/*
-		 * this.frames = new ArrayList<Frame>(10);
-		 * 
-		 * this.frames.add(new Frame(1, new Pinfall(), true));
-		 * 
-		 * for (int i = 1; i < 9; i++) { this.frames.add(new Frame((i+1), new Pinfall(),
-		 * false)); } this.frames.add(new Frame(9, new LastPinfall(), false));
-		 */
-		
 		this.playerName = playerName;
-		this.frameNumberToCalculate = 0;
 		this.currentFrameNumber = 1;
 		this.currentScoreFrame = 1;
 		this.finalScore = 0;
 	}
 	
-	public Integer getFrameNumberToCalculate() {
-		return frameNumberToCalculate;
-	}
-
-	public void setFrameNumberToCalculate(Integer frameNumberToCalculate) {
-		this.frameNumberToCalculate = frameNumberToCalculate;
-	}
-
 	public Integer getFinalScore() {
 		return finalScore;
 	}

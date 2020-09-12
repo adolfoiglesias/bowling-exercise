@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.jobsity.exercise.bowling.container;
+package com.jobsity.exercise.bowling.factory;
 
 import com.jobsity.exercise.bowling.model.BowlingGame;
 

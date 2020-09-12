@@ -4,6 +4,7 @@
 package com.jobsity.exercise.bowling.service.game;
 
 import com.jobsity.exercise.bowling.exception.BowlingGameException;
+import com.jobsity.exercise.bowling.model.BowlingGame;
 import com.jobsity.exercise.bowling.model.Player;
 
 /**
@@ -18,7 +19,7 @@ public interface PlayerService {
 	 * @return Add new player if not exist. Return the player
 	 * @throws BowlingGameException
 	 */
-	public Player addNewPlayer(String playerName)  throws BowlingGameException;
+	public Player addNewPlayer(String playerName, BowlingGame game)  throws BowlingGameException;
 	
 
 }

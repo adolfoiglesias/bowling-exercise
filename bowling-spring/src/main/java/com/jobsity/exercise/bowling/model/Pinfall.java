@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  * 	Class represents the results of a frame
  * </p>
  */
-public class Pinfall implements PinfallInterface {
+public class Pinfall {
 
 	protected String value1;
 	protected String value2;
@@ -26,31 +26,27 @@ public class Pinfall implements PinfallInterface {
 		value1 = "";
 		value2 = "";
 	}
-	
-	
 
-	@Override
 	public boolean addResult(String result) throws BowlingGameException {
-		
+
 		validateResult(result);
-		
 		result = result.trim();
-		
+
 		if(result.equalsIgnoreCase("10")) {
-		
+
 			pinfallType = PinfallType.STRIKE;
 			value1 = result;
 			closed = true;
-			
+
 		} else {
-			
+
 			if(value1.isBlank()) {
 				value1 = result;
-				
+
 			} else {
-			
+
 				value2 = result;
-				
+
 				if(isSpareInternal()) {
 					pinfallType = PinfallType.SPARE;
 				}else {
@@ -58,51 +54,27 @@ public class Pinfall implements PinfallInterface {
 				}
 				closed = true;
 			}
-			
-		}	
+		}
 		return closed;
 	}
 
-	@Override
-	public String showPinfallValue() {
-
-		if (isStrike()) {
-			return "  " + "X" + " ";
-
-		} else if (isSpare()) {
-			return showValue(value1) + showValue("/");
-
-		} else {
-			return showValue(value1) + showValue(value2);
-		}
-	}
-
-	protected String showValue(String value) {
-
-		return value + " ";
-		/*
-		 * if(value.length() == 1) { return value + " "; } else { // length = 2 return
-		 * value + " "; }
-		 */
-	}
-	
 	protected void validateResult(String result) throws BowlingGameException {
 		if(result == null || result.isBlank()) {
 			throw new BowlingGameException("Invalid result . It can not be empty", BowlingCodeException.INVALID_VALUE_RESULT.name());
 		}
 		result = result.trim();
 		if(StringUtils.isNumeric(result)) {
-			
+
 			if(Integer.valueOf(result) < 0 || Integer.valueOf(result) > 10) {
 				throw new BowlingGameException("Invalid result. It can not be < 0 or > 10 ", BowlingCodeException.INVALID_VALUE_RESULT.name());
 			}
-			
+
 			try{
-		        Integer.parseInt(result);
-		    } catch (NumberFormatException ex){
-		    	throw new BowlingGameException("Invalid result. It can not be a decimal number ", BowlingCodeException.INVALID_VALUE_RESULT.name());
-		    }
-			
+				Integer.parseInt(result);
+			} catch (NumberFormatException ex){
+				throw new BowlingGameException("Invalid result. It can not be a decimal number ", BowlingCodeException.INVALID_VALUE_RESULT.name());
+			}
+
 		} else {
 			if(!result.equalsIgnoreCase("F")) {
 				throw new BowlingGameException("Invalid result. It must be number >= 0 and <= 10 or the letter 'F'", BowlingCodeException.INVALID_VALUE_RESULT.name());
@@ -175,5 +147,4 @@ public class Pinfall implements PinfallInterface {
 	public PinfallType getPinfallType() {
 		return pinfallType;
 	}
-
 }
