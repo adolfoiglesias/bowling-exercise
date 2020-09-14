@@ -81,7 +81,7 @@ public class BowlingGameServiceImpl implements GameService {
 		String regex = "^\\w+\\t(\\d|10|F)";
 
 		if (!line.trim().matches(regex)) {
-			throw new BowlingGameException("The row " + pos + " (" + line + ") is invalid",
+			throw new BowlingGameException("The row " + pos + " (" + line + ") has not a valid format",
 					BowlingCodeException.INVALID_FORMAT.name());
 		}
 

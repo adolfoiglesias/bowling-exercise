@@ -33,41 +33,6 @@ public class BowlingApplication {
 			System.exit(0);
 		}
 
-
-		/*
-		ConfigurableApplicationContext applicationContext = SpringApplication.run(BowlingApplication.class, args);
-
-
-		String successfullMsg = "The was read correctly. The score was written at %s" ;
-
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Please enter the file absolute path or 1 to stop the program");
-
-		GameService gameService = (GameService) applicationContext.getBean("bowlingGameServiceImpl", GameService.class);
-
-		while(scanner.hasNextLine()) {
-
-			try {
-
-				String path = scanner.nextLine().trim();
-
-				if(path.trim().equalsIgnoreCase("1")) {
-					System.exit(0);
-				}
-				String output = gameService.startGame(path);
-
-				System.out.println(String.format(successfullMsg,  output));
-				System.lineSeparator();
-				System.out.println("Please enter the file absolute path or 1 to stop the program");
-				gameService.resetGame();
-
-			} catch (IOException | BowlingGameException e) {
-				handleException(e);
-			}
-		}
-		scanner.close();
-		*/
-
 	}
 
 	private static void handleException(Exception e) {
